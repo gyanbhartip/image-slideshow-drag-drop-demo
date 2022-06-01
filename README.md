@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/aaf6c8d8-6266-4408-8969-fdf20755a307/deploy-status)](https://app.netlify.com/sites/draggable-image-slideshow-demo-1gb/deploys)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
