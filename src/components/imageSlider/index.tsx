@@ -1,9 +1,19 @@
-import { Draggable } from "react-beautiful-dnd";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "@hello-pangea/dnd";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
-import { useGlobalContext } from "../../utils/context/Context";
+import { useGlobalContext } from "../../utils/context";
+import { SliderDataListType } from "../../utils/types";
 import "./ImageSlider.css";
-const ImageSlider = ({ SliderData }) => {
+
+type Props = {
+  SliderData: SliderDataListType;
+};
+
+const ImageSlider: React.FC<Props> = ({ SliderData }) => {
   const { current, setCurrent, setSliderData } = useGlobalContext();
   const length = SliderData.length;
 
@@ -15,11 +25,11 @@ const ImageSlider = ({ SliderData }) => {
     setCurrent(current === 0 ? length - 1 : current - 1);
   };
 
-  const setSlideFromThumb = (index) => {
+  const setSlideFromThumb = (index: number) => {
     setCurrent(index);
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
     if (

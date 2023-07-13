@@ -1,4 +1,6 @@
-const reducer = (state, action) => {
+import { ActionType, InitialStateType } from "../types";
+
+const reducer = (state: InitialStateType, action: ActionType) => {
   switch (action.type) {
     case "SET_CURRENT":
       return { ...state, current: action.current };

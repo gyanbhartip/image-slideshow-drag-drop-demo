@@ -1,5 +1,5 @@
-import { useGlobalContext } from "../../utils/context/Context";
-import ImageSlider from "../imageSlider/ImageSlider";
+import { useGlobalContext } from "../../utils/context";
+import ImageSlider from "../imageSlider";
 import "./App.css";
 
 function App() {
