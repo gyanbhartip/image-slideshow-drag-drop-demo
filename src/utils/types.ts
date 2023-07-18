@@ -18,6 +18,7 @@ export type InitialStateType = {
 export type SliderDataType = {
     id: string;
     image: string;
+    shift: number;
 };
 
 export type SliderDataListType = SliderDataType[];

@@ -3,7 +3,7 @@ import {
     Draggable,
     DropResult,
     Droppable,
-} from '@hello-pangea/dnd';
+} from 'react-beautiful-dnd';
 
 import { FC, useCallback } from 'react';
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
@@ -44,6 +44,21 @@ const ImageSlider: FC<Props> = ({ SliderData }) => {
             const items = Array.from(SliderData);
             const [reorderedItem] = items.splice(result.source.index, 1);
             items.splice(result.destination.index, 0, reorderedItem);
+
+            // Calculate the direction of the shift (positive or negative)
+            const shiftDirection =
+                result.source.index < result.destination.index ? 1 : -1;
+
+            // Calculate the number of positions to shift
+            const shiftAmount = Math.abs(
+                result.source.index - result.destination.index,
+            );
+
+            // Shift the remaining items horizontally
+            for (let i = result.destination.index; i < items.length; i++) {
+                const shift = shiftDirection * shiftAmount;
+                items[i].shift += shift;
+            }
 
             setSliderData(items);
         },
@@ -91,48 +106,51 @@ const ImageSlider: FC<Props> = ({ SliderData }) => {
                 />
             </section>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="thumbs">
-                    {provided => (
-                        <section
-                            className="thumbs"
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}>
-                            {SliderData.map(({ id, image }, index) => {
-                                return (
-                                    <Draggable
-                                        key={id}
-                                        draggableId={id}
-                                        index={index}>
-                                        {provided => {
-                                            return (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className={
-                                                        index === current
-                                                            ? 'thumb-image-container active'
-                                                            : ''
-                                                    }
-                                                    // eslint-disable-next-line react/jsx-no-bind
-                                                    onClick={() =>
-                                                        handleThumbClick(index)
-                                                    }>
-                                                    <img
-                                                        src={image}
-                                                        alt="thumbnail"
-                                                        className="thumb-image"
-                                                    />
-                                                </div>
-                                            );
-                                        }}
+                <section className="thumbs">
+                    {SliderData.map(({ id, image, shift }, index) => (
+                        <Droppable key={id} droppableId={id}>
+                            {provided => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    // Apply the horizontal shift
+                                    style={
+                                        index !== current
+                                            ? {
+                                                  transform: `translateX(${shift}px)`,
+                                                  zIndex: 1,
+                                              }
+                                            : {
+                                                  transform: `translateX(${shift}px) scale(1.1)`,
+                                              }
+                                    }
+                                    // eslint-disable-next-line react/jsx-no-bind
+                                    onClick={() => handleThumbClick(index)}>
+                                    <Draggable draggableId={id} index={index}>
+                                        {provided => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className={
+                                                    index === current
+                                                        ? 'thumb-image-container active'
+                                                        : 'thumb-image-container'
+                                                }>
+                                                <img
+                                                    src={image}
+                                                    alt="thumbnail"
+                                                    className="thumb-image"
+                                                />
+                                            </div>
+                                        )}
                                     </Draggable>
-                                );
-                            })}
-                            {provided.placeholder}
-                        </section>
-                    )}
-                </Droppable>
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    ))}
+                </section>
             </DragDropContext>
         </main>
     );
